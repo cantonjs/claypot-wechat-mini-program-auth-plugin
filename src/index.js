@@ -1,4 +1,4 @@
-import { ensureLogger, cacheStores, cache } from 'claypot';
+import { ensureLogger } from 'claypot';
 import WechatMiniProgramAuth from 'wechat-mini-program-auth';
 
 const logger = ensureLogger('wechat-mini-program-auth', 'yellowBright');
@@ -32,7 +32,8 @@ export default class WechatMiniProgramAuthClaypotPlugin {
 		this._security = security;
 	}
 
-	async willStartServer() {
+	async willStartServer(app) {
+		const { cacheStores, cache } = app;
 		const { _storeKey } = this;
 		const cacheStore = _storeKey ? cacheStores[_storeKey] : cache;
 		warnMemoryCache(cacheStore);
