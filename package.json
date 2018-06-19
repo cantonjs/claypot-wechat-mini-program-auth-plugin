@@ -1,7 +1,7 @@
 {
   "name": "claypot-wechat-mini-program-auth-plugin",
   "description": "claypot plugin for wechat mini program login and get user info",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "lib/index",
   "files": [
     "*.md",
