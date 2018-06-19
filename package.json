@@ -23,7 +23,7 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "koa-wechat-mini-program-auth": "^0.1.0"
+    "wechat-mini-program-auth": "^0.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -38,7 +38,10 @@
     "babel-preset-stage-0": "^6.5.0",
     "babel-preset-stage-0-without-async": "^1.0.0",
     "babel-register": "^6.11.6",
+    "claypot": "^0.1.1",
+    "claypot-restful-plugin": "^0.0.1",
     "cross-env": "^4.0.0",
+    "delay": "^3.0.0",
     "eslint": "^4.19.1",
     "eslint-config-cantonjs": "^0.2.0",
     "eslint-config-standard": "^11.0.0",
@@ -51,6 +54,7 @@
     "get-port": "^3.2.0",
     "jest": "^20.0.4",
     "koa": "^2.5.1",
+    "node-fetch": "^2.1.2",
     "prettier-eslint-cli": "^4.7.0",
     "rimraf": "^2.5.4"
   },
@@ -64,6 +68,7 @@
     ]
   },
   "peerDependencies": {
-    "claypot": "^0.1.1"
+    "claypot": "^0.0.0",
+    "claypot-restful-plugin": "^0.0.1"
   }
 }
