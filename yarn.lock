@@ -7006,12 +7006,6 @@ webidl-conversions@^4.0.0:
   version "4.0.1"
   resolved "http://registry.npm.taobao.org/webidl-conversions/download/webidl-conversions-4.0.1.tgz#8015a17ab83e7e1b311638486ace81da6ce206a0"
 
-wechat-mini-program-auth@^0.1.1:
-  version "0.1.1"
-  resolved "http://registry.npm.taobao.org/wechat-mini-program-auth/download/wechat-mini-program-auth-0.1.1.tgz#8e0ac01080a84f565d98131910d2f5f7cafde376"
-  dependencies:
-    node-fetch "^2.1.2"
-
 whatwg-encoding@^1.0.1:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/whatwg-encoding/download/whatwg-encoding-1.0.1.tgz#3c6c451a198ee7aec55b1ec61d0920c67801a5f4"
@@ -7109,6 +7103,12 @@ write@^0.2.1:
   resolved "http://registry.npm.taobao.org/write/download/write-0.2.1.tgz#5fc03828e264cea3fe91455476f7a3c566cb0757"
   dependencies:
     mkdirp "^0.5.1"
+
+wxapp-auth@^0.2.1:
+  version "0.2.1"
+  resolved "http://registry.npm.taobao.org/wxapp-auth/download/wxapp-auth-0.2.1.tgz#10032f3b9244c5ab8c37d7e5d6cc59ae475d8685"
+  dependencies:
+    node-fetch "^2.1.2"
 
 x-xss-protection@1.1.0:
   version "1.1.0"

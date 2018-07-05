@@ -1,5 +1,5 @@
 {
-  "name": "claypot-wechat-mini-program-auth-plugin",
+  "name": "claypot-wxapp-auth-plugin",
   "description": "claypot plugin for wechat mini program login and get user info",
   "version": "0.0.1",
   "main": "lib/index",
@@ -16,14 +16,14 @@
     "preversion": "yarn test && yarn build"
   },
   "author": "Cap32",
-  "repository": "cantonjs/claypot-wechat-mini-program-auth-plugin",
+  "repository": "cantonjs/claypot-wxapp-auth-plugin",
   "engines": {
     "node": ">=7.6"
   },
   "keywords": [],
   "license": "MIT",
   "dependencies": {
-    "wechat-mini-program-auth": "^0.1.1"
+    "wxapp-auth": "^0.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

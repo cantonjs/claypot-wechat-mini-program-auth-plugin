@@ -1,5 +1,5 @@
 import { startServer, stopServer } from './utils';
-import { sha1 } from 'wechat-mini-program-auth/lib/utils';
+import { sha1 } from 'wxapp-auth/lib/utils';
 import fetch from 'node-fetch';
 import { sessionKey } from './fixtures';
 import delay from 'delay';

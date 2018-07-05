@@ -1,7 +1,7 @@
 import { ensureLogger } from 'claypot';
-import WechatMiniProgramAuth from 'wechat-mini-program-auth';
+import Wxapp from 'wxapp-auth';
 
-const logger = ensureLogger('wechat-mini-program-auth', 'yellowBright');
+const logger = ensureLogger('wxapp-auth', 'yellowBright');
 
 const warnMemoryCache = function warnMemoryCache(cache) {
 	if (!warnMemoryCache.warned && cache.store && cache.store.name === 'memory') {
@@ -12,14 +12,14 @@ const warnMemoryCache = function warnMemoryCache(cache) {
 	}
 };
 
-export default class WechatMiniProgramAuthClaypotPlugin {
+export default class WxappClaypotPlugin {
 	constructor(config = {}) {
 		const {
 			appId,
 			appSecret,
 			store,
-			prefix = 'wmpa',
-			security = 'wechatUser',
+			prefix = 'wxappAuth',
+			security = 'wxapp',
 			ttl = '2d',
 			wechatLoginURL, // only for testing,
 		} = config;
@@ -45,7 +45,7 @@ export default class WechatMiniProgramAuthClaypotPlugin {
 		const getKey = (id) => `${this._prefix}:${id}`;
 		const options = {};
 		if (_wechatLoginURL) options.wechatLoginURL = _wechatLoginURL;
-		const wechatMiniProgramAuth = new WechatMiniProgramAuth(
+		const wxappAuth = new Wxapp(
 			_appId,
 			_appSecret,
 			options,
@@ -60,7 +60,7 @@ export default class WechatMiniProgramAuthClaypotPlugin {
 				return this._cacheStore.get(cacheKey);
 			};
 
-			ctx.clay.wechatMiniProgramAuth = {
+			ctx.clay.wxappAuth = {
 				login: async ({ code }) => {
 					const { sign } = ctx.clay;
 
@@ -74,7 +74,7 @@ export default class WechatMiniProgramAuthClaypotPlugin {
 						sessionKey,
 						openid,
 						unionid,
-					} = await wechatMiniProgramAuth.getSession({ code });
+					} = await wxappAuth.getSession({ code });
 					const signPayload = { openid, unionid };
 					const signOptions = { security: this._security };
 					const res = await sign(signPayload, signOptions);
@@ -85,7 +85,7 @@ export default class WechatMiniProgramAuthClaypotPlugin {
 				getUserInfo: async (params = {}) => {
 					const sessionKey = await getSession();
 					if (!sessionKey) return ctx.throw(401, 'Session Expired');
-					return wechatMiniProgramAuth.getUserInfo({ ...params, sessionKey });
+					return wxappAuth.getUserInfo({ ...params, sessionKey });
 				},
 				verify: async () => {
 					const sessionKey = await getSession();

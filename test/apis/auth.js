@@ -15,8 +15,8 @@ export default {
 				},
 			},
 			async ctrl() {
-				const { params, wechatMiniProgramAuth } = this;
-				return wechatMiniProgramAuth.login(params.body);
+				const { params, wxappAuth } = this;
+				return wxappAuth.login(params.body);
 			},
 		},
 	},
@@ -37,8 +37,8 @@ export default {
 				},
 			},
 			async ctrl() {
-				const { params, wechatMiniProgramAuth } = this;
-				return wechatMiniProgramAuth.getUserInfo(params.body);
+				const { params, wxappAuth } = this;
+				return wxappAuth.getUserInfo(params.body);
 			},
 		},
 	},
@@ -47,8 +47,8 @@ export default {
 			summary: 'Verify session',
 			security: ['wechatUser'],
 			async ctrl() {
-				const { wechatMiniProgramAuth } = this;
-				const ok = await wechatMiniProgramAuth.verify();
+				const { wxappAuth } = this;
+				const ok = await wxappAuth.verify();
 				return { ok };
 			},
 		},
