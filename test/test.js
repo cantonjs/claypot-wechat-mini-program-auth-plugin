@@ -20,6 +20,20 @@ describe('claypot restful plugin', () => {
 		});
 	});
 
+	test('should login() with getSignPayload work', async () => {
+		const { urlRoot } = await startServer();
+		const res = await fetch(`${urlRoot}/api/auth/login`, {
+			method: 'POST',
+			body: JSON.stringify({ code: 'foo', useCustomSignPayload: true }),
+			headers: { 'Content-Type': 'application/json' },
+		});
+		expect(await res.json()).toMatchObject({
+			accessToken: expect.any(String),
+			openid: expect.any(String),
+			user: expect.any(Object),
+		});
+	});
+
 	test('should getUserInfo() work', async () => {
 		const { urlRoot } = await startServer();
 		const json = { hello: 'world' };
@@ -42,6 +56,31 @@ describe('claypot restful plugin', () => {
 			},
 		});
 		expect(await res.json()).toEqual(json);
+	});
+
+	test('should throw 401 error when getUserInfo() error', async () => {
+		const { urlRoot } = await startServer();
+		const json = { hello: 'world' };
+		const rawData = JSON.stringify(json);
+		const loginRes = await fetch(`${urlRoot}/api/auth/login`, {
+			method: 'POST',
+			body: JSON.stringify({ code: 'foo' }),
+			headers: { 'Content-Type': 'application/json' },
+		});
+		const { accessToken } = await loginRes.json();
+		const res = await fetch(`${urlRoot}/api/auth/getUserInfo`, {
+			method: 'POST',
+			body: JSON.stringify({
+				rawData,
+				signature: sha1(rawData + sessionKey + 1),
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+				'X-ACCESS-TOKEN': accessToken,
+			},
+		});
+
+		expect(res.status).toEqual(401);
 	});
 
 	test('should verify() work', async () => {

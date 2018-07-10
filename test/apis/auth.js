@@ -9,6 +9,7 @@ export default {
 						type: 'object',
 						properties: {
 							code: { type: 'string' },
+							useCustomSignPayload: { type: 'boolean' },
 						},
 						required: ['code'],
 					},
@@ -16,7 +17,18 @@ export default {
 			},
 			async ctrl() {
 				const { params, wxappAuth } = this;
-				return wxappAuth.login(params.body);
+				const { code, useCustomSignPayload } = params.body;
+				const options = { code };
+				if (useCustomSignPayload) {
+					const getSignPayload = () => {
+						return {
+							payload: { id: '1' },
+							extraData: { user: { id: 1, name: 'jack' } },
+						};
+					};
+					Object.assign(options, { getSignPayload });
+				}
+				return wxappAuth.login(options);
 			},
 		},
 	},

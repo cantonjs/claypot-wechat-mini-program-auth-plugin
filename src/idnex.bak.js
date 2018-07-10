@@ -18,8 +18,6 @@ export default class WxappClaypotPlugin {
 			appId,
 			appSecret,
 			store,
-			//TODO: 增加namespace的使用 --done but need to check and add test case
-			namespace = 'wxappAuth',
 			prefix = 'wxappAuth',
 			security = 'wxapp',
 			ttl = '2d',
@@ -29,7 +27,6 @@ export default class WxappClaypotPlugin {
 		this._appSecret = appSecret;
 		this._wechatLoginURL = wechatLoginURL;
 		this._storeKey = store;
-		this._namespace = namespace;
 		this._prefix = prefix;
 		this._ttl = ttl;
 		this._security = security;
@@ -44,7 +41,7 @@ export default class WxappClaypotPlugin {
 	}
 
 	middleware(app) {
-		const { _ttl: ttl, _appId, _appSecret, _wechatLoginURL, _namespace } = this;
+		const { _ttl: ttl, _appId, _appSecret, _wechatLoginURL } = this;
 		const getKey = (id) => `${this._prefix}:${id}`;
 		const options = {};
 		if (_wechatLoginURL) options.wechatLoginURL = _wechatLoginURL;
@@ -63,59 +60,32 @@ export default class WxappClaypotPlugin {
 				return this._cacheStore.get(cacheKey);
 			};
 
-			const pluginSign = async (signPayload = {}, isReSign) => {
-				const { sign } = ctx.clay;
+			ctx.clay.wxappAuth = {
+				login: async ({ code }) => {
+					const { sign } = ctx.clay;
 
-				if (!sign) {
-					logger.fatal('required `claypot-restful-plugin`');
-					ctx.throw(500);
-					return;
-				}
-
-				const signOptions = { security: this._security };
-
-				const res = await sign(signPayload, signOptions);
-				return res;
-			};
-
-			ctx.clay[_namespace] = {
-				login: async ({ code, getSignPayload }) => {
+					if (!sign) {
+						logger.fatal('required `claypot-restful-plugin`');
+						ctx.throw(500);
+						return;
+					}
 
 					const {
 						sessionKey,
 						openid,
 						unionid,
 					} = await wxappAuth.getSession({ code });
-
-					// use openid to set cache
+					const signPayload = { openid, unionid };
+					const signOptions = { security: this._security };
+					const res = await sign(signPayload, signOptions);
 					const cacheKey = getKey(openid);
 					await this._cacheStore.set(cacheKey, sessionKey, { ttl });
-
-					const signPayload = { openid };
-					const res = { openid, unionid };
-
-					if (typeof getSignPayload === 'function') {
-						const { payload, extraData } = getSignPayload();
-						Object.assign(signPayload, payload);
-						Object.assign(res, extraData);
-					}
-
-					const signRes = await pluginSign(signPayload);
-
-					return { ...res, ...signRes };
+					return { ...res, openid, unionid };
 				},
 				getUserInfo: async (params = {}) => {
 					const sessionKey = await getSession();
 					if (!sessionKey) return ctx.throw(401, 'Session Expired');
-
-					// TODO 捕捉解密失败的错误 并抛出401错误 --done but need to check and add test case
-					try {
-						const res = await wxappAuth.getUserInfo({ ...params, sessionKey });
-						return res;
-					}
-					catch (err) {
-						return ctx.throw(401, err);
-					}
+					return wxappAuth.getUserInfo({ ...params, sessionKey });
 				},
 				verify: async () => {
 					const sessionKey = await getSession();
@@ -128,3 +98,4 @@ export default class WxappClaypotPlugin {
 		});
 	}
 }
+
