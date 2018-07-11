@@ -1,7 +1,7 @@
 import { startServer, stopServer } from './utils';
 import { sha1 } from 'wxapp-auth/lib/utils';
 import fetch from 'node-fetch';
-import { sessionKey } from './fixtures';
+import { sessionKey, user } from './fixtures';
 import delay from 'delay';
 
 describe('claypot restful plugin', () => {
@@ -17,20 +17,7 @@ describe('claypot restful plugin', () => {
 		expect(await res.json()).toMatchObject({
 			accessToken: expect.any(String),
 			openid: expect.any(String),
-		});
-	});
-
-	test('should login() with getSignPayload work', async () => {
-		const { urlRoot } = await startServer();
-		const res = await fetch(`${urlRoot}/api/auth/login`, {
-			method: 'POST',
-			body: JSON.stringify({ code: 'foo', useCustomSignPayload: true }),
-			headers: { 'Content-Type': 'application/json' },
-		});
-		expect(await res.json()).toMatchObject({
-			accessToken: expect.any(String),
-			openid: expect.any(String),
-			user: expect.any(Object),
+			user: expect.objectContaining(user),
 		});
 	});
 
@@ -43,7 +30,9 @@ describe('claypot restful plugin', () => {
 			body: JSON.stringify({ code: 'foo' }),
 			headers: { 'Content-Type': 'application/json' },
 		});
+
 		const { accessToken } = await loginRes.json();
+
 		const res = await fetch(`${urlRoot}/api/auth/getUserInfo`, {
 			method: 'POST',
 			body: JSON.stringify({

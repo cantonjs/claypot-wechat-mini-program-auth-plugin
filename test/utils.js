@@ -20,6 +20,7 @@ export async function startServer(pluginConfig, claypotConfig) {
 					appId: 'foo',
 					appSecret: 'bar',
 					wechatLoginURL: `${urlRoot}/wechat`,
+					namespace: 'wxAuth',
 					...pluginConfig,
 				},
 			},

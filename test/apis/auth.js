@@ -1,3 +1,5 @@
+import { user } from '../fixtures';
+
 export default {
 	'/login': {
 		post: {
@@ -9,26 +11,16 @@ export default {
 						type: 'object',
 						properties: {
 							code: { type: 'string' },
-							useCustomSignPayload: { type: 'boolean' },
 						},
 						required: ['code'],
 					},
 				},
 			},
 			async ctrl() {
-				const { params, wxappAuth } = this;
-				const { code, useCustomSignPayload } = params.body;
-				const options = { code };
-				if (useCustomSignPayload) {
-					const getSignPayload = () => {
-						return {
-							payload: { id: '1' },
-							extraData: { user: { id: 1, name: 'jack' } },
-						};
-					};
-					Object.assign(options, { getSignPayload });
-				}
-				return wxappAuth.login(options);
+				const { params, wxAuth } = this;
+				const { sign, openid } = await wxAuth.login(params.body);
+				const signRes = await sign({ id: user.id });
+				return { ...signRes, user, openid };
 			},
 		},
 	},
@@ -49,8 +41,8 @@ export default {
 				},
 			},
 			async ctrl() {
-				const { params, wxappAuth } = this;
-				return wxappAuth.getUserInfo(params.body);
+				const { params, wxAuth } = this;
+				return wxAuth.getUserInfo(params.body);
 			},
 		},
 	},
@@ -59,8 +51,8 @@ export default {
 			summary: 'Verify session',
 			security: ['wechatUser'],
 			async ctrl() {
-				const { wxappAuth } = this;
-				const ok = await wxappAuth.verify();
+				const { wxAuth } = this;
+				const ok = await wxAuth.verify();
 				return { ok };
 			},
 		},
