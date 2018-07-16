@@ -90,14 +90,19 @@ export default class WxappClaypotPlugin {
 					} = await wxappAuth.getSession({ code });
 
 					const sign = async (payload) => {
+						let signValue;
 
-						const keyValue = payload[_signKey];
-
-						if (!keyValue) {
-							ctx.throw(500, `Sign Error: sign content should contain ${_signKey}`);
+						if (!payload) {
+							signValue = openid;
+						}
+						else {
+							signValue = payload[_signKey];
+							if (!signValue) {
+								ctx.throw(500, `Sign Error: sign content should contain ${_signKey}`);
+							}
 						}
 
-						const cacheKey = getKey(keyValue);
+						const cacheKey = getKey(signValue);
 						await this._cacheStore.set(cacheKey, sessionKey, { ttl });
 
 						return pluginSign(payload);
