@@ -21,7 +21,7 @@ export default class WxappClaypotPlugin {
 			namespace = 'wxappAuth',
 			prefix = 'wxappAuth',
 			security = 'wxapp',
-			ttl = '2d',
+			ttl = 172800, // 2days
 			signKey = 'id',
 			wechatLoginURL, // only for testing,
 		} = config;
